@@ -82,4 +82,12 @@ public class BookController {
         }
         return matchingBooks;
     }
+
+    // 5. POST /api/books
+    // Aggiungi un nuovo libro
+    @PostMapping
+    public Book addBook(@RequestBody Book book) {
+        this.books.add(book);
+        return book;
+    }
 }
