@@ -66,6 +66,20 @@ public class BookController {
         } else {
             return new ArrayList<>();
         }
+    }
 
+    // 4. GET /api/books/price-range/{minPrice}/{maxPrice}
+    // Trova libri in un determinato range di prezzo
+    @GetMapping("/price-range/{minPrice}/{maxPrice}")
+    public List<Book> getBooksByPriceRange(@PathVariable double minPrice,
+                                           @PathVariable double maxPrice) {
+
+        List<Book> matchingBooks = new ArrayList<>();
+        for (Book book : books) {
+            if (book.getPrice() <= maxPrice && book.getPrice() >= minPrice) {
+                matchingBooks.add(book);
+            }
+        }
+        return matchingBooks;
     }
 }
