@@ -85,7 +85,7 @@ public class BookController {
 
     // 5. POST /api/books
     // Aggiungi un nuovo libro
-    @PostMapping
+    @PostMapping("/add_book")
     public Book addBook(@RequestBody Book book) {
         this.books.add(book);
         return book;
