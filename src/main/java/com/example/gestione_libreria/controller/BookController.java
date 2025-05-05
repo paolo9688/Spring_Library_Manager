@@ -94,4 +94,11 @@ public class BookController {
         this.books.add(book);
         return ResponseEntity.ok(book);
     }
+
+    // 6. GET /api/books
+    // Ottenere tutti i libri
+    @GetMapping("/select_all")
+    public ResponseEntity<List<Book>> getAllBooks() {
+        return ResponseEntity.ok(books);
+    }
 }
