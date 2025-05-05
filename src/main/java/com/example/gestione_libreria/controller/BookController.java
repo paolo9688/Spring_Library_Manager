@@ -129,4 +129,31 @@ public class BookController {
 
         return ResponseEntity.ok(existingBook);
     }
+
+    // 8. DELETE /api/books
+    // Eliminare un libro
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Book> deleteBook(@PathVariable Long id) {
+        Book bookToDelete = null;
+        for (Book book : books) {
+            if (book.getId().equals(id)) {
+                bookToDelete = book;
+                books.remove(bookToDelete);
+            }
+        }
+
+        if (bookToDelete == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(bookToDelete);
+    }
+
+    // 9. POST /api/books
+    // Aggiungi nuovi libri
+    @PostMapping("/add_books")
+    public ResponseEntity<List<Book>> addBooks(@RequestBody List<Book> myBooks) {
+        this.books.addAll(myBooks);
+        return ResponseEntity.ok(books);
+    }
 }
