@@ -1,6 +1,7 @@
 package com.example.gestione_libreria.controller;
 
 import com.example.gestione_libreria.Book;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class BookController {
     // 1. GET /api/books
     // Recupera tutti i libri con possibilità di filtrare per genere e anno
     @GetMapping("/find_book_by_genre_and_year")
-    public List<Book> getBooks(@RequestParam(required = false) String genre,
+    public ResponseEntity<List<Book>> getBooks(@RequestParam(required = false) String genre,
                                @RequestParam(required = false) Integer year) {
 
         if (genre != null && year != null) {
@@ -31,28 +32,28 @@ public class BookController {
                     matchingBooks.add(book);
                 }
             }
-            return matchingBooks;
+            return ResponseEntity.ok(matchingBooks);
         } else {
-            return new ArrayList<>();
+            return ResponseEntity.notFound().build();
         }
     }
 
     // 2. GET /api/books/{id}
     // Recupera un libro specifico per ID
     @GetMapping("/find_book_by_id/{id}")
-    public Book getBookById(@PathVariable Long id) {
+    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
         for (Book book : books) {
             if (book.getId().equals(id)) {
-                return book;
+                return ResponseEntity.ok(book);
             }
         }
-        return new Book();
+        return ResponseEntity.notFound().build();
     }
 
     // 3. GET /api/books/search
     // Cerca libri per titolo o autore
     @GetMapping("/search")
-    public List<Book> searchBooks(@RequestParam(required = false) String title,
+    public ResponseEntity<List<Book>> searchBooks(@RequestParam(required = false) String title,
                                   @RequestParam(required = false) String author) {
 
         if (title != null && author != null) {
@@ -62,32 +63,35 @@ public class BookController {
                     matchingBooks.add(book);
                 }
             }
-            return matchingBooks;
+            return ResponseEntity.ok(matchingBooks);
         } else {
-            return new ArrayList<>();
+            return ResponseEntity.notFound().build();
         }
     }
 
     // 4. GET /api/books/price-range/{minPrice}/{maxPrice}
     // Trova libri in un determinato range di prezzo
     @GetMapping("/price-range/{minPrice}/{maxPrice}")
-    public List<Book> getBooksByPriceRange(@PathVariable double minPrice,
-                                           @PathVariable double maxPrice) {
+    public ResponseEntity<List<Book>> getBooksByPriceRange(@PathVariable Double minPrice,
+                                           @PathVariable Double maxPrice) {
 
-        List<Book> matchingBooks = new ArrayList<>();
-        for (Book book : books) {
-            if (book.getPrice() <= maxPrice && book.getPrice() >= minPrice) {
-                matchingBooks.add(book);
+        if (minPrice != null && maxPrice != null) {
+            List<Book> matchingBooks = new ArrayList<>();
+            for (Book book : books) {
+                if (book.getPrice() <= maxPrice && book.getPrice() >= minPrice) {
+                    matchingBooks.add(book);
+                }
             }
+            return ResponseEntity.ok(matchingBooks);
         }
-        return matchingBooks;
+        return ResponseEntity.notFound().build();
     }
 
     // 5. POST /api/books
     // Aggiungi un nuovo libro
     @PostMapping("/add_book")
-    public Book addBook(@RequestBody Book book) {
+    public ResponseEntity<Book> addBook(@RequestBody Book book) {
         this.books.add(book);
-        return book;
+        return ResponseEntity.ok(book);
     }
 }
