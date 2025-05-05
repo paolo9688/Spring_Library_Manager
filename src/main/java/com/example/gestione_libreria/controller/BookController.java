@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -134,11 +135,15 @@ public class BookController {
     // Eliminare un libro
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Book> deleteBook(@PathVariable Long id) {
+        Iterator<Book> iterator = books.iterator();
         Book bookToDelete = null;
-        for (Book book : books) {
-            if (book.getId().equals(id)) {
-                bookToDelete = book;
-                books.remove(bookToDelete);
+
+        while (iterator.hasNext()) {
+            Book currentBook = iterator.next();
+            if (currentBook.getId().equals(id)) {
+                bookToDelete = currentBook;
+                iterator.remove();
+                break;
             }
         }
 
