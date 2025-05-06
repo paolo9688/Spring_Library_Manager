@@ -1,4 +1,4 @@
-package com.example.gestione_libreria;
+package com.example.gestione_libreria.entity;
 
 public class Book {
     private Long id;
