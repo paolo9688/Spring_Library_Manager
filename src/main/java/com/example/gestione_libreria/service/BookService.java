@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -17,7 +18,7 @@ public class BookService {
             new Book(5L, "libro5", "autore5", "genere5", 2004, 9.0)
     ));
 
-    // Metodo per la ricerca del libro da ID:
+    // Metodo per la ricerca del libro da id:
     public Book findById(Long id) {
         Book bookFind = null;
 
@@ -26,6 +27,7 @@ public class BookService {
                 bookFind = book;
             }
         }
+
         return bookFind;
     }
 
@@ -38,6 +40,7 @@ public class BookService {
                 matchingBooks.add(book);
             }
         }
+
         return matchingBooks;
     }
 
@@ -50,6 +53,7 @@ public class BookService {
                 matchingBooks.add(book);
             }
         }
+
         return matchingBooks;
     }
 
@@ -62,6 +66,7 @@ public class BookService {
                 matchingBooks.add(book);
             }
         }
+
         return matchingBooks;
     }
 
@@ -76,5 +81,49 @@ public class BookService {
     public List<Book> findAllBooks() {
         List<Book> matchingBooks = this.books;
         return matchingBooks;
+    }
+
+    // Metodo per aggiornare un libro:
+    public Book updateBook(Long id, Book bookDetails) {
+        Book existingBook = null;
+
+        for (Book book : books) {
+            if (book.getId().equals(id)) {
+                existingBook = book;
+                break;
+            }
+        }
+
+        existingBook.setTitle(bookDetails.getTitle());
+        existingBook.setAuthor(bookDetails.getAuthor());
+        existingBook.setGenre(bookDetails.getGenre());
+        existingBook.setYear(bookDetails.getYear());
+        existingBook.setPrice(bookDetails.getPrice());
+
+        return existingBook;
+    }
+
+    // Metodo per eliminare un libro dal database da id:
+    public Book deleteBook(Long id) {
+        Iterator<Book> iterator = books.iterator();
+        Book bookToDelete = null;
+
+        while (iterator.hasNext()) {
+            Book currentBook = iterator.next();
+            if (currentBook.getId().equals(id)) {
+                bookToDelete = currentBook;
+                iterator.remove();
+                break;
+            }
+        }
+
+        return bookToDelete;
+    }
+
+    // Metodo per aggiungere una lista di libri:
+    public List<Book> addBooks(List<Book> newBooks) {
+        List<Book> booksToAdd = newBooks;
+        this.books.addAll(booksToAdd);
+        return this.books;
     }
 }

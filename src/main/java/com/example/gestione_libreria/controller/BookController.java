@@ -7,9 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -30,19 +27,7 @@ public class BookController {
         if(booksFinded == null) {
             return ResponseEntity.notFound().build();
         }
-
         return ResponseEntity.ok(booksFinded);
-        /*if (genre != null && year != null) {
-            List<Book> matchingBooks = new ArrayList<>();
-            for (Book book : books) {
-                if (book.getGenre().equals(genre) && book.getYear().equals(year)) {
-                    matchingBooks.add(book);
-                }
-            }
-            return ResponseEntity.ok(matchingBooks);
-        } else {
-            return ResponseEntity.notFound().build();
-        }*/
     }
 
     // 2. GET /api/books/{id}
@@ -55,7 +40,6 @@ public class BookController {
         if(bookFinded == null) {
             return ResponseEntity.notFound().build();
         }
-
         return ResponseEntity.ok(bookFinded);
     }
 
@@ -70,20 +54,7 @@ public class BookController {
         if(booksFinded == null) {
             return ResponseEntity.notFound().build();
         }
-
         return ResponseEntity.ok(booksFinded);
-
-        /*if (title != null && author != null) {
-            List<Book> matchingBooks = new ArrayList<>();
-            for (Book book : books) {
-                if (book.getTitle().equals(title) && book.getAuthor().equals(author)) {
-                    matchingBooks.add(book);
-                }
-            }
-            return ResponseEntity.ok(matchingBooks);
-        } else {
-            return ResponseEntity.notFound().build();
-        }*/
     }
 
     // 4. GET /api/books/price-range/{minPrice}/{maxPrice}
@@ -97,28 +68,14 @@ public class BookController {
         if(booksFinded == null) {
             return ResponseEntity.notFound().build();
         }
-
         return ResponseEntity.ok(booksFinded);
-
-        /*if (minPrice != null && maxPrice != null) {
-            List<Book> matchingBooks = new ArrayList<>();
-            for (Book book : books) {
-                if (book.getPrice() <= maxPrice && book.getPrice() >= minPrice) {
-                    matchingBooks.add(book);
-                }
-            }
-            return ResponseEntity.ok(matchingBooks);
-        }
-        return ResponseEntity.notFound().build();*/
     }
 
     // 5. POST /api/books
     // Aggiungi un nuovo libro
     @PostMapping("/add_book")
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
-
         Book bookToAdd = bookService.addBook(book);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(bookToAdd);
     }
 
@@ -136,42 +93,20 @@ public class BookController {
     public ResponseEntity<Book> updateBook(
             @PathVariable Long id,
             @RequestBody Book bookDetails) {
-        Book existingBook = null;
-        for (Book book : books) {
-            if (book.getId().equals(id)) {
-                existingBook = book;
-                break;
-            }
-        }
+        Book bookToUpdate = bookService.updateBook(id, bookDetails);
 
-        if (existingBook == null) {
+        if (bookToUpdate == null) {
             return ResponseEntity.notFound().build();
         }
 
-        existingBook.setTitle(bookDetails.getTitle());
-        existingBook.setAuthor(bookDetails.getAuthor());
-        existingBook.setGenre(bookDetails.getGenre());
-        existingBook.setYear(bookDetails.getYear());
-        existingBook.setPrice(bookDetails.getPrice());
-
-        return ResponseEntity.ok(existingBook);
+        return ResponseEntity.ok(bookToUpdate);
     }
 
     // 8. DELETE /api/books
     // Eliminare un libro
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Book> deleteBook(@PathVariable Long id) {
-        Iterator<Book> iterator = books.iterator();
-        Book bookToDelete = null;
-
-        while (iterator.hasNext()) {
-            Book currentBook = iterator.next();
-            if (currentBook.getId().equals(id)) {
-                bookToDelete = currentBook;
-                iterator.remove();
-                break;
-            }
-        }
+        Book bookToDelete = bookService.deleteBook(id);
 
         if (bookToDelete == null) {
             return ResponseEntity.notFound().build();
@@ -184,7 +119,7 @@ public class BookController {
     // Aggiungi nuovi libri
     @PostMapping("/add_books")
     public ResponseEntity<List<Book>> addBooks(@RequestBody List<Book> myBooks) {
-        this.books.addAll(myBooks);
-        return ResponseEntity.ok(books);
+        List<Book> booksToAdd = bookService.addBooks(myBooks);
+        return ResponseEntity.ok(booksToAdd);
     }
 }
